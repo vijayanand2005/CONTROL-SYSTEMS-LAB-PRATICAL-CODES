@@ -10,4 +10,5 @@ phi=inv(X); //Inverse of Matrix
 Y=C*phi; 
 Z=Y*B; 
 //sys=tf2ss(Z) 
-disp(Z,"The tr
+disp(Z,"The transfer function representation of system is T(S)="); 
+//disp(sys) 
