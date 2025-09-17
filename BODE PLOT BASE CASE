@@ -1,0 +1,16 @@
+clc; clear;
+
+// Transfer function
+k=10;
+G = syslin('c', k*poly([1],"s","coeff"), poly([0 1 0.6 0.05],"s","coeff"));
+disp(G,"The given transfer function G(s) =");
+
+// Bode + margins
+bode(G,0.01,1000); xtitle("Bode plot of G(s)");
+[gm,frg]=g_margin(G); [pm,frp]=p_margin(G); show_margins(G);
+
+// Results
+disp([gm 20*log10(gm)],"Gain Margin (abs , dB) =");
+disp(frg,"Gain crossover freq (rad/s) =");
+disp(pm,"Phase Margin (deg) =");
+disp(frp,"Phase crossover freq (rad/s) =");
