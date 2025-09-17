@@ -1,0 +1,40 @@
+clear; clc;
+
+
+// --------- Define system ---------
+A = [0 1; -0.4 -1.3];
+B = [0; 1];
+C = [0.8 1];
+D = [0];
+
+G = syslin('c', A, B, C, D);   // State-space system
+ssprint(G, 'System G');
+
+// --------- Controllability ---------
+Cc = cont_mat(A, B);
+disp(Cc, 'Controllability matrix=');
+if det(Cc) ~= 0 then
+    printf('System is completely controllable\n');
+else
+    printf('System is NOT completely controllable\n');
+end
+
+// --------- Observability ---------
+Ob = obsv_mat(A, C);
+disp(Ob, 'Observability matrix=');
+if det(Ob) ~= 0 then
+    printf('System is completely observable\n');
+else
+    printf('System is NOT completely observable\n');
+end
+
+// --------- Transfer function ---------
+Htf = ss2tf(G);
+disp(Htf, 'Transfer function=');
+
+// --------- Eigenvalues and characteristic polynomial ---------
+e = spec(A);
+disp(e, 'Eigenvalues=');
+
+char_poly = poly(e, 's');
+disp(char_poly, 'Characteristic polynomial=');
