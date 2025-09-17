@@ -1,0 +1,24 @@
+clc; clear;
+
+num = poly([1],'s','coeff');      // numerator = 1
+den = poly([1 2],'s','coeff');    // denominator = s + 2
+g = syslin('c', num/den);
+disp(g, 'The given first order system function G(s) =');
+
+t = 0:0.05:50;
+
+// Step response
+gs = csim('step',t,g);
+subplot(121)
+plot2d(t,gs)
+xlabel('Time {t} (sec)')
+ylabel('Step response {c(t)}')
+title('Step Response of a First Order System')
+
+// Impulse response
+gi = csim('impulse',t,g);
+subplot(122)
+plot2d(t,gi)
+xlabel('Time {t} (sec)')
+ylabel('Impulse response {c(t)}')
+title('Impulse Response of a First Order System')
