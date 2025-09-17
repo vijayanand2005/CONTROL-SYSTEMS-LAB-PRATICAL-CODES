@@ -1,0 +1,8 @@
+clc; clear; 
+Z=[2;1];P=[0;-3-%i;-3+%i];K=2.5; 
+disp('Enter the zeros Z = ',Z)  
+disp('Enter the poles P = ',P) 
+disp('Enter the system gain K = ',K) 
+S=zp2tf(Z,P,K,"c") 
+roots(S.num) 
+disp( 'The obtained transfer function S =',S) 
