@@ -1,0 +1,23 @@
+// -------- Transfer Function to State-Space --------
+clear; clc;
+
+s = %s;
+
+// Define transfer function H(s) = s / (s^3 + 14 s^2 + 56 s + 160)
+Htf = syslin('c', s, s^3 + 14*s^2 + 56*s + 160);
+disp(Htf, 'The given transfer function H(s) =');
+
+// Convert transfer function to state-space
+Hss = tf2ss(Htf);
+disp(Hss, 'State-space model (x* = Ax + Bu, y = Cx + Du)');
+
+// Alternative: Get A, B, C, D matrices directly
+[A, B, C, D] = abcd(Htf);
+disp(A, 'A =');
+disp(B, 'B =');
+disp(C, 'C =');
+disp(D, 'D =');
+
+// Cross-check: Convert back to transfer function
+Htf2 = clean(ss2tf(Hss));
+disp(Htf2, 'Transfer function from state-space (for verification) =');
