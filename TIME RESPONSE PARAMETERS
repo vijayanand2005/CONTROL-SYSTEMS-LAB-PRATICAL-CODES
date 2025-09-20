@@ -1,48 +1,36 @@
-clear;clc; 
- 
-mode(0); 
- 
-Mp=0.2; 
-tp=1; 
-J=1;//kg.mˆ2 
-B=1;//N−/rad/sec 
- 
-s=%s; 
-pi=%pi; 
-Eq=(s*pi)^2-log(1/Mp)^2*(1-s^2); 
-disp(Eq, 'The obtained equation') 
- 
-x=roots(Eq); 
-disp(x,'x=') 
- 
-zeta=abs(x(1)); 
-disp(zeta,'zeta=') 
- 
-wd=pi/tp; 
-disp(wd,'damped frequency wd=') 
- 
-wn=wd/sqrt(1-zeta^2); 
-disp(wn,'natural frequency wn=') 
- 
- 
- 
-K=J*wn^2; 
-disp(K, 'K=') 
- 
-Kh=(2*sqrt(K*J)*zeta-B)/K; 
-disp(Kh,'Kh=') 
- 
-sigma=wn*zeta; 
-disp(sigma, 'sigma=') 
- 
-_beta=atan(wd/sigma); 
-disp(_beta,'Beta =') 
- 
-tr=(pi-_beta)/wd; 
-disp(tr,'Rise time tr=') 
- 
-ts_2percent=4/sigma; 
-disp(ts_2percent, 'Settling time for 2% error=') 
- 
-ts_5percent=3/sigma; 
-disp(ts_5percent, 'Settling time for 5% error=') 
+clear; clc;
+
+Mp=0.2; tp=1; J=1; B=1;     // system specs
+s=%s; pi=%pi;
+
+// Damping ratio (zeta)
+Eq=(s*pi)^2 - (log(1/Mp))^2*(1-s^2);
+zeta=abs(roots(Eq)(1));
+
+// Frequencies
+wd=pi/tp;
+wn=wd/sqrt(1-zeta^2);
+
+// Constants
+K=J*wn^2;
+Kh=(2*sqrt(K*J)*zeta-B)/K;
+sigma=wn*zeta;
+
+// Time-domain specs
+beta=atan(wd/sigma);
+tr=(%pi-beta)/wd;
+ts2=4/sigma;
+ts5=3/sigma;
+
+// Display results one by one
+disp(zeta,"Damping ratio zeta =");
+disp(wd,"Damped frequency wd =");
+disp(wn,"Natural frequency wn =");
+disp(K,"K =");
+disp(Kh,"Kh =");
+disp(sigma,"Sigma =");
+disp(beta,"Beta =");
+disp(tr,"Rise time tr =");
+disp(ts2,"Settling time (2%) =");
+disp(ts5,"Settling time (5%) =");
+
