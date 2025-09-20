@@ -1,0 +1,17 @@
+clc;
+s=%s;
+t=0:0.1:10;
+z_vals=[0 0.5 1 10];              // damping ratios
+titles=["Undamped","Underdamped","Critically damped","Overdamped"];
+
+for k=1:4
+    z=z_vals(k);
+    num=36; 
+    den=s^2+2*z*s+36;             // standard 2nd-order form
+    TF=syslin('c',num,den);
+    y=csim('step',t,TF);
+    subplot(2,2,k);
+    plot(t,y);
+    xlabel('Time {t} sec'); ylabel('System response {c(t)}');
+    title(titles(k)+' system');
+end
