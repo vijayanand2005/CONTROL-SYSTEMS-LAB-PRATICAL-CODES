@@ -1,64 +1,31 @@
-clc; 
-clear; 
- 
+clc; clear; 
 
 // Controller parameters
-Kp = 4;           // proportional gain 
-Ki1 = 2;          // integral gain (for Gi)
-Td = 0.8;         // differential time 
-Ti = 2;           // integral time 
-Ki2 = Kp/Ti;      // equivalent integral gain 
+Kp=4; Ki1=2; Td=0.8; Ti=2; Ki2=Kp/Ti;
+s=%s; Gi=syslin('c',Ki1/s);        // Integral transfer function
+t=0:0.05:3; ramp=t;
 
-// Time and signals
-t = 0:0.05:3;     
-ramp = t;         
+// --- Responses ---
+p1=Kp*ones(t);          // Proportional (step)
+p2=Kp*t;                // Proportional (ramp)
+i1=csim("step",t,Gi);   // Integral (step)
+i2=csim(ramp,t,Gi);     // Integral (ramp)
+i1=i1*Ki2/Ki1; i2=i2*Ki2/Ki1;
 
-// Transfer function for integral control
-s = %s; 
-Gi = syslin('c',Ki1/s); 
+pd1=p1;                           // PD (step)
+pd2=p2+Kp*Td*ones(t);             // PD (ramp)
 
-// ----------------- Proportional control -----------------
-subplot(321);
-p1 = Kp*ones(1,length(t));  // response to step input
-p2 = Kp*t;                  // response to ramp input
-plot2d(t,p1,2); 
-plot2d(t,p2,3); 
-xtitle('Proportional Control','t','y'); 
-legend(['Step input','Ramp input']); 
-xgrid(color('gray')); 
+// --- Plotting helper ---
+function plot_resp(row,col,pos,y1,y2,titleTxt)
+    subplot(row,col,pos);
+    plot2d(t,y1,style=2); plot2d(t,y2,style=3);
+    xtitle(titleTxt,"t","y"); xgrid(color("gray"));
+endfunction
 
-// ----------------- Integral control -----------------
-subplot(322);
-i1 = csim("step",t,Gi); 
-i2 = csim(ramp,t,Gi); 
-plot2d(t,i1,2); 
-plot2d(t,i2,3); 
-xtitle('Integral Control','t','y'); 
-xgrid(color('gray')); 
-
-// Adjust gain scaling
-i1 = i1*Ki2/Ki1; 
-i2 = i2*Ki2/Ki1; 
-
-// ----------------- Proportional + Integral (PI) -----------------
-subplot(323); 
-plot2d(t,p1+i1,2); 
-plot2d(t,p2+i2,3); 
-xtitle('Proportional + Integral (PI) Control','t','y'); 
-xgrid(color('gray')); 
-
-// ----------------- Proportional + Derivative (PD) -----------------
-subplot(324); 
-pd1 = p1; 
-pd2 = p2 + Kp*Td*ones(1,length(t)); // derivative effect 
-plot2d(t,pd1,2); 
-plot2d(t,pd2,3); 
-xtitle('Proportional + Derivative (PD) Control','t','y'); 
-xgrid(color('gray')); 
-
-// ----------------- PID Control -----------------
-subplot(325); 
-plot2d(t,pd1+i1,2); 
-plot2d(t,pd2+i2,3); 
-xtitle('PID Control','t','y'); 
-xgrid(color('gray')); 
+// --- Draw all controllers ---
+plot_resp(3,2,1,p1,p2,"Proportional");
+legend("Step","Ramp");
+plot_resp(3,2,2,i1,i2,"Integral");
+plot_resp(3,2,3,p1+i1,p2+i2,"Proportional + Integral (PI)");
+plot_resp(3,2,4,pd1,pd2,"Proportional + Derivative (PD)");
+plot_resp(3,2,5,pd1+i1,pd2+i2,"PID Control");
