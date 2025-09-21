@@ -1,0 +1,15 @@
+clc; clear;
+
+// Frequency range
+omega = 0:0.1:20;   
+
+// Transfer function G(s) = 1/(s+1), example
+s = %i*omega;
+G = 1 ./ (s+1);
+
+// Magnitude and angle
+r = abs(G);
+theta = atan(imag(G), real(G));
+
+// Polar plot
+polarplot(theta, r);
