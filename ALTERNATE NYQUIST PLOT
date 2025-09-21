@@ -1,0 +1,14 @@
+// Nyquist Plot Example in Scilab
+
+clc; clear; 
+
+s = %s;  // Laplace variable
+
+// Define transfer function H(s) = (example system)
+Hs = syslin('c', (s+1)/(s^2 + 2*s + 2));
+
+// Nyquist plot
+nyquist(Hs);
+
+// Add grid
+xgrid();
